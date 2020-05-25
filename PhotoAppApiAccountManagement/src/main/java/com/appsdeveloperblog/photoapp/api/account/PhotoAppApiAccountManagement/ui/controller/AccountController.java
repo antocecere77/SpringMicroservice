@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/account")
 public class AccountController {
 
-    @GetMapping("/status/chack")
+    @GetMapping("/status/check")
     public String status() {
         return "Working...";
     }
