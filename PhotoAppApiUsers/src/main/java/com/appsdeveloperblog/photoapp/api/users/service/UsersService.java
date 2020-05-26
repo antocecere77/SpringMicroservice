@@ -1,0 +1,6 @@
+package com.appsdeveloperblog.photoapp.api.users.service;
+
+public interface UsersService {
+
+    UserDto createUser(UserDto userDetails);
+}
