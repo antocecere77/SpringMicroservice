@@ -20,6 +20,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
     public AuthorizationFilter(AuthenticationManager authenticationManager, Environment environment) {
         super(authenticationManager);
+        this.environment = environment;
     }
 
     @Override
@@ -50,7 +51,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
                 .setSigningKey(environment.getProperty("token.secret"))
                 .parseClaimsJws(token)
                 .getBody()
-                .getSubject();
+                .getSubject(); 
 
         if (userId == null) {
             return null;
