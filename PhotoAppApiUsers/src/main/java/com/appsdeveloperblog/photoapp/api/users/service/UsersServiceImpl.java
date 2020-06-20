@@ -5,8 +5,11 @@ import com.appsdeveloperblog.photoapp.api.users.data.UserEntity;
 import com.appsdeveloperblog.photoapp.api.users.data.UserRepository;
 import com.appsdeveloperblog.photoapp.api.users.shared.UserDto;
 import com.appsdeveloperblog.photoapp.api.users.ui.model.AlbumResponseModel;
+import feign.FeignException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
@@ -31,6 +34,8 @@ public class UsersServiceImpl implements UsersService {
     //RestTemplate restTemplate;
     Environment environment;
     AlbumsServiceClient albumsServiceClient;
+
+    Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public UsersServiceImpl(UserRepository userRepository,
@@ -96,7 +101,13 @@ public class UsersServiceImpl implements UsersService {
         //ResponseEntity<List<AlbumResponseModel>> albumsListResponse = restTemplate.exchange(albumsUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<AlbumResponseModel>>() {
         //});
         //List<AlbumResponseModel> albumsList = albumsListResponse.getBody();
-        List<AlbumResponseModel> albumsList = albumsServiceClient.getAlbums(userId);
+
+        List<AlbumResponseModel> albumsList = null;
+        try {
+            albumsList = albumsServiceClient.getAlbums(userId);
+        } catch (FeignException e) {
+            logger.error(e.getLocalizedMessage());
+        }
 
         userDto.setAlbums(albumsList);
         return userDto;
