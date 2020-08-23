@@ -33,11 +33,13 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable().authorizeRequests()
                 .antMatchers("/actuator/*").permitAll()
-                .antMatchers("/users/**").permitAll()
+                //.antMatchers("/users/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/users").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(getAuthenticationFilter())
+                .addFilter(new AuthorizationFilter(authenticationManager(), environment))
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
